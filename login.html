@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GFT Pimenta - Painel Admin</title>
+    <style>
+        * { box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: linear-gradient(rgba(0,0,0,0.92), rgba(0,0,0,0.92)), url('logo.JPG.jpeg') no-repeat center center fixed; background-size: cover; color: #ffffff; margin: 0; padding: 0; }
+
+        /* ── LOGIN ── */
+        #tela-login { position: fixed; top:0; left:0; width:100%; height:100%; z-index:9999; display:flex; align-items:center; justify-content:center; backdrop-filter:blur(10px); }
+        .login-box { background:#121212; padding:35px 40px; border-radius:8px; border:1px solid #333; width:100%; max-width:400px; text-align:center; box-shadow:0 4px 25px rgba(0,0,0,0.7); }
+        .login-logo { width:110px; height:110px; object-fit:contain; border-radius:50%; border:2px solid #444; margin-bottom:15px; }
+        .tela-login-secao { display:none; }
+        input, select { width:100%; padding:12px; margin:6px 0 14px 0; border-radius:4px; border:1px solid #444; background:#1a1a1a; color:white; font-size:15px; }
+        .btn-principal { width:100%; padding:13px; background:#ffffff; color:#000; font-weight:bold; border:none; border-radius:4px; cursor:pointer; font-size:15px; margin-top:4px; }
+        .btn-principal:hover { background:#ddd; }
+        .btn-verde { background:#25d366 !important; color:white !important; }
+        .btn-link { background:none; color:#ff4444; font-size:13px; text-decoration:underline; border:none; cursor:pointer; display:inline-block; padding:4px; }
+        .btn-azul { color:#3b9cff !important; }
+        .token-input { text-align:center; font-size:28px; letter-spacing:8px; font-weight:bold; }
+        .assinatura-login { margin-top:25px; padding-top:12px; border-top:1px solid #222; color:#555; font-size:11px; line-height:1.7; }
+        .assinatura-login a { color:#555; }
+        label { display:block; text-align:left; color:#aaa; font-size:13px; margin-bottom:2px; }
+
+        /* ── PAINEL ── */
+        #painel-admin { display:none; }
+        .navbar { display:flex; justify-content:space-between; align-items:center; background:rgba(18,18,18,0.97); padding:12px 20px; border-bottom:2px solid #fff; position:sticky; top:0; z-index:100; }
+        .navbar-logo { width:42px; height:42px; object-fit:contain; border-radius:50%; border:1px solid #555; margin-right:10px; vertical-align:middle; }
+        .navbar-title { font-weight:bold; font-size:15px; }
+        .navbar-right { display:flex; gap:10px; }
+        .btn-navbar { background:rgba(255,255,255,0.1); color:#fff; border:1px solid #555; padding:7px 14px; border-radius:4px; cursor:pointer; font-size:13px; font-weight:bold; }
+        .btn-navbar:hover { background:#fff; color:#000; }
+
+        .menu-grid { display:flex; flex-wrap:wrap; gap:20px; justify-content:center; padding:30px 20px; max-width:900px; margin:0 auto; }
+        .menu-card { background:rgba(25,25,25,0.9); border:1px solid #333; border-radius:10px; padding:30px 20px; width:200px; text-align:center; cursor:pointer; transition:0.3s; text-decoration:none; color:#fff; }
+        .menu-card:hover { border-color:#fff; transform:translateY(-3px); background:rgba(40,40,40,0.9); }
+        .menu-card .icone { font-size:40px; margin-bottom:12px; }
+        .menu-card .titulo { font-size:15px; font-weight:bold; }
+        .menu-card .subtitulo { font-size:12px; color:#aaa; margin-top:5px; }
+
+        .box-screen { display:none; background:rgba(18,18,18,0.88); padding:25px; border-radius:8px; margin:20px auto; max-width:850px; border:1px solid #333; }
+        .box-titulo { font-size:18px; font-weight:bold; margin:0 0 20px 0; border-bottom:1px solid #333; padding-bottom:10px; }
+        .btn-acao { padding:12px 20px; background:#fff; color:#000; border:none; border-radius:4px; cursor:pointer; font-weight:bold; font-size:14px; }
+        .btn-acao:hover { background:#ddd; }
+        .btn-acao-verde { background:#25d366 !important; color:white !important; }
+        .btn-acao-verde:hover { background:#1ebd58 !important; }
+
+        .assinatura-admin { text-align:center; padding:20px; background:rgba(10,10,10,0.95); color:#666; font-size:12px; border-top:1px solid #222; margin-top:40px; line-height:1.8; }
+        .assinatura-admin a { color:#666; }
+    </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- TELA DE LOGIN                                             -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div id="tela-login">
+    <div class="login-box">
+        <img src="logo.JPG.jpeg" alt="Logo GFT" class="login-logo">
+        <!-- SECÇÃO: CRIAR CONTA (1º acesso) -->
+        <div id="tela-criar-conta" class="tela-login-secao">
+            <h2 style="margin-top:0;">🥋 Primeiro Acesso</h2>
+            <p style="color:#aaa;font-size:13px;margin-bottom:18px;">Crie as suas credenciais de administrador</p>
+            <label>Código de Instalação</label>
+            <input type="text" id="codigoInstalacao" placeholder="Código fornecido pelo suporte">
+            <label>Nome de Utilizador</label>
+            <input type="text" id="novoUserAdmin" placeholder="Ex: denis">
+            <label>Senha (mínimo 6 caracteres)</label>
+            <input type="password" id="novaSenhaAdmin" placeholder="Senha secreta">
+            <label>WhatsApp (com DDD)</label>
+            <input type="tel" id="adminTel" placeholder="31 97358-6216">
+            <label>E-mail (opcional)</label>
+            <input type="email" id="adminEmail" placeholder="exemplo@email.com">
+            <button class="btn-principal btn-verde" onclick="criarPrimeiroAcesso()">✅ Criar Conta e Entrar</button>
+        </div>
+
+        <!-- SECÇÃO: LOGIN NORMAL -->
+        <div id="tela-login-normal" class="tela-login-secao">
+            <h2 style="margin-top:0;">🔒 Área Restrita</h2>
+            <p style="color:#aaa;font-size:13px;margin-bottom:18px;">Acesso Exclusivo GFT Pimenta</p>
+            <label>Utilizador</label>
+            <input type="text" id="userLogin" placeholder="Ex: denis">
+            <label>Senha</label>
+            <input type="password" id="senhaLogin" placeholder="Senha secreta" onkeydown="if(event.key==='Enter') tentarLogin()">
+            <button class="btn-principal" onclick="tentarLogin()">Entrar</button>
+            <div style="margin-top:10px;">
+                <button class="btn-link" onclick="recuperarAlterarSenha()">Esqueci a senha</button>
+            </div>
+        </div>
+
+        <!-- SECÇÃO: TOKEN -->
+        <div id="tela-token" class="tela-login-secao">
+            <h2 style="margin-top:0;">📲 Verificação</h2>
+            <p style="color:#25d366;font-size:13px;">✔ Código enviado para o seu WhatsApp!</p>
+            <p style="color:#aaa;font-size:13px;">Digite o código de 6 dígitos:</p>
+            <input type="text" id="tokenInput" class="token-input" maxlength="6" placeholder="______" oninput="if(this.value.length===6) verificarToken()">
+            <button class="btn-principal" onclick="verificarToken()">Verificar</button>
+            <div style="margin-top:10px;">
+                <button class="btn-link" onclick="enviarTokenAutomatico()">Reenviar código</button>
+            </div>
+        </div>
+
+        <div class="assinatura-login">
+            Desenvolvido por <strong>Marcos Ribeiro</strong><br>
+            <a href="https://wa.me/351936707337" target="_blank">Contacto Suporte: +351 936 707 337</a><br>
+            &copy; 2026 | Portfólio de Análise e Desenvolvimento de Sistemas (ADS) - Código Protegido
+        </div>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- PAINEL ADMIN                                              -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div id="painel-admin">
+    <div class="navbar">
+        <div>
+            <img src="logo.JPG.jpeg" alt="Logo" class="navbar-logo">
+            <span class="navbar-title">PAINEL GFT PIMENTA</span>
+        </div>
+        <div class="navbar-right">
+            <button class="btn-navbar" onclick="abrirTela('tela-configuracoes')">⚙️ Configurações</button>
+            <button class="btn-navbar" onclick="location.reload()">🔒 Sair</button>
+        </div>
+    </div>
+
+    <!-- MENU PRINCIPAL -->
+    <div id="tela-inicio" class="box-screen" style="display:block; background:transparent; border:none;">
+        <div class="menu-grid">
+            <div class="menu-card" onclick="abrirTela('tela-alunos')">
+                <div class="icone">👥</div>
+                <div class="titulo">Alunos</div>
+                <div class="subtitulo">Cadastrar e gerir alunos</div>
+            </div>
+            <div class="menu-card" onclick="abrirTela('tela-eventos')">
+                <div class="icone">📅</div>
+                <div class="titulo">Eventos</div>
+                <div class="subtitulo">Calendário de lutas e eventos</div>
+            </div>
+            <div class="menu-card" onclick="abrirTela('tela-fotos')">
+                <div class="icone">📸</div>
+                <div class="titulo">Fotos</div>
+                <div class="subtitulo">Gerir carrossel do site</div>
+            </div>
+            <div class="menu-card" onclick="abrirTela('tela-configuracoes')">
+                <div class="icone">⚙️</div>
+                <div class="titulo">Configurações</div>
+                <div class="subtitulo">Alterar acesso e dispositivos</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TELA: ALUNOS -->
+    <div id="tela-alunos" class="box-screen">
+        <div class="box-titulo">👥 Gestão de Alunos</div>
+        
+        <div style="display:flex;gap:15px;flex-wrap:wrap;margin-bottom:20px;">
+            <div style="flex:1;min-width:280px;background:#1a1a1a;padding:18px;border-radius:6px;border:1px solid #333;">
+                <strong style="font-size:15px;">➕ Cadastrar Novo Aluno</strong><br><br>
+                <label>Nome Completo</label>
+                <input type="text" id="alunoNome" placeholder="Nome do atleta">
+                <label>Telefone</label>
+                <input type="tel" id="alunoTel" placeholder="31 00000-0000">
+                <label>Modalidade</label>
+                <select id="alunoModalidade">
+                    <option value="Muay Thai">Muay Thai</option>
+                    <option value="Boxe">Boxe</option>
+                    <option value="Jiu-Jitsu">Jiu-Jitsu</option>
+                </select>
+                <label>Data de Nascimento</label>
+                <input type="date" id="alunoNasc">
+                <button class="btn-acao btn-acao-verde" style="width:100%;" onclick="salvarAluno()">✅ Cadastrar Aluno</button>
+            </div>
+            <div style="flex:2;min-width:300px;">
+                <div style="display:flex;gap:10px;margin-bottom:15px;">
+                    <input type="text" id="buscaAlunoAdmin" placeholder="Buscar por nome ou matrícula..." style="margin:0;">
+                    <button class="btn-acao" onclick="buscarAlunoAdmin()">🔍</button>
+                    <button class="btn-acao" onclick="carregarListaAlunos()">↺</button>
+                </div>
+                <div id="tabelaAlunos"></div>
+            </div>
+        </div>
+        <button class="btn-acao" onclick="carregarMenuInicio()">← Voltar ao Menu</button>
+    </div>
+
+    <!-- TELA: EVENTOS -->
+    <div id="tela-eventos" class="box-screen">
+        <div class="box-titulo">📅 Calendário de Eventos</div>
+        <div style="display:flex;gap:15px;flex-wrap:wrap;">
+            <div style="flex:1;min-width:280px;background:#1a1a1a;padding:18px;border-radius:6px;border:1px solid #333;">
+                <strong style="font-size:15px;">➕ Adicionar Evento</strong><br><br>
+                <label>Título do Evento</label>
+                <input type="text" id="eventoTitulo" placeholder="Ex: Campeonato Regional">
+                <label>Data</label>
+                <input type="date" id="eventoData">
+                <label>Hora (opcional)</label>
+                <input type="time" id="eventoHora">
+                <label>Local (opcional)</label>
+                <input type="text" id="eventoLocal" placeholder="Ex: Ginásio Municipal">
+                <label>Descrição (opcional)</label>
+                <input type="text" id="eventoDesc" placeholder="Informações adicionais">
+                <button class="btn-acao btn-acao-verde" style="width:100%;" onclick="salvarEvento()">✅ Publicar Evento</button>
+            </div>
+            <div style="flex:2;min-width:300px;">
+                <strong style="font-size:15px;">📋 Próximos Eventos</strong>
+                <div id="listaEventos" style="margin-top:15px;"></div>
+            </div>
+        </div>
+        <br>
+        <button class="btn-acao" onclick="carregarMenuInicio()">← Voltar ao Menu</button>
+    </div>
+
+    <!-- TELA: FOTOS -->
+    <div id="tela-fotos" class="box-screen">
+        <div class="box-titulo">📸 Gestão de Fotos do Carrossel</div>
+        <p style="color:#aaa;font-size:13px;">O carrossel já inclui automaticamente pimenta1.jpg até pimenta21.jpg. Aqui podes adicionar ficheiros extra.</p>
+        <div style="display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap;">
+            <input type="text" id="fotoNome" placeholder="Nome do ficheiro. Ex: pimenta22.jpeg" style="flex:1;min-width:200px;margin:0;">
+            <button class="btn-acao btn-acao-verde" onclick="adicionarFoto()">➕ Adicionar</button>
+        </div>
+        <div id="listaFotos"></div>
+        <br>
+        <button class="btn-acao" onclick="carregarMenuInicio()">← Voltar ao Menu</button>
+    </div>
+
+    <!-- TELA: CONFIGURAÇÕES -->
+    <div id="tela-configuracoes" class="box-screen">
+        <div class="box-titulo">⚙️ Configurações de Acesso</div>
+        <div style="background:#1a1a1a;padding:20px;border-radius:6px;border:1px solid #333;max-width:400px;">
+            <strong>Alterar Credenciais</strong>
+            <p style="color:#ff4444;font-size:12px;">⚠️ Ao alterar, todos os dispositivos perderão a confiança e precisarão de token.</p>
+            <label>Novo Utilizador</label>
+            <input type="text" id="altUser" placeholder="Novo nome de utilizador">
+            <label>Nova Senha</label>
+            <input type="password" id="altSenha" placeholder="Nova senha (mín. 6 caracteres)">
+            <label>Novo WhatsApp</label>
+            <input type="tel" id="altTel" placeholder="31 97358-6216">
+            <button class="btn-acao btn-acao-verde" style="width:100%;" onclick="alterarCredenciais()">💾 Guardar Alterações</button>
+        </div>
+        <br>
+        <button class="btn-acao" onclick="carregarMenuInicio()">← Voltar ao Menu</button>
+    </div>
+
+    <footer class="assinatura-admin">
+        Desenvolvido por <strong>Marcos Ribeiro</strong> | 
+        <a href="https://wa.me/351936707337" target="_blank">Contacto Suporte: +351 936 707 337</a><br>
+        &copy; 2026 | Portfólio de Análise e Desenvolvimento de Sistemas (ADS) - Código Protegido
+    </footer>
+</div>
+
+<script src="./app.js"></script>
+</body>
+</html>

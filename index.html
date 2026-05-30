@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GFT Pimenta - Portal Público</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            margin: 0; 
+            padding: 0; 
+            color: #ffffff; 
+            text-align: center; 
+            overflow-x: hidden;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: url('logo.JPG.jpeg') no-repeat center center;
+            background-size: cover;
+            filter: blur(8px) brightness(0.25);
+            transform: scale(1.05);
+            z-index: -1;
+        }
+        header { background: rgba(18, 18, 18, 0.95); padding: 25px 20px; border-bottom: 2px solid #ffffff; backdrop-filter: blur(5px); position: relative; }
+        .header-logo { width: 120px; height: 120px; object-fit: contain; border-radius: 50%; border: 2px solid #ffffff; margin-bottom: 10px; }
+        .btn-admin-topo { position: absolute; top: 25px; right: 20px; background: rgba(255,255,255,0.1); color: #fff; padding: 8px 15px; border-radius: 4px; border: 1px solid #555; text-decoration: none; font-size: 12px; font-weight: bold; transition: 0.3s; cursor: pointer; }
+        .btn-admin-topo:hover { background: #fff; color: #000; }
+
+        .painel-horarios { background: rgba(20, 20, 20, 0.9); max-width: 900px; margin: 20px auto 0 auto; padding: 20px; border-radius: 8px; border: 1px solid #444; box-shadow: 0 4px 15px rgba(0,0,0,0.5); backdrop-filter: blur(10px); }
+        .horarios-titulo { font-size: 20px; font-weight: bold; color: #ffffff; margin-top: 0; margin-bottom: 15px; letter-spacing: 1px; border-bottom: 1px solid #333; padding-bottom: 8px; }
+        .horarios-grid { display: flex; flex-wrap: wrap; justify-content: space-around; gap: 15px; }
+        .horario-item { flex: 1; min-width: 180px; background: rgba(30, 30, 30, 0.6); padding: 12px; border-radius: 6px; border: 1px solid #333; }
+        .horario-item h4 { margin: 0 0 5px 0; color: #aaaaaa; font-size: 13px; text-transform: uppercase; }
+        .horario-item p { margin: 0; font-size: 16px; font-weight: bold; }
+
+        .carrossel-section { width: 100%; max-width: 100%; margin: 25px auto 30px auto; padding: 25px 0; background: rgba(18, 18, 18, 0.75); border-bottom: 1px solid #333; border-top: 1px solid #333; backdrop-filter: blur(10px); overflow: hidden; }
+        .carrossel-window { width: 100%; overflow: hidden; position: relative; }
+        .carrossel-track { display: flex; gap: 20px; width: max-content; animation: girarCarrossel 60s linear infinite; }
+        .carrossel-track:hover { animation-play-state: paused; }
+        .foto-card { width: 340px; height: 280px; background: #1a1a1a; border-radius: 8px; border: 1px solid #444; overflow: hidden; box-shadow: 0 6px 15px rgba(0,0,0,0.6); flex-shrink: 0; }
+        .foto-card img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 15%; }
+        @keyframes girarCarrossel { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+        .container-duplo { display: flex; flex-direction: row; justify-content: center; align-items: flex-start; gap: 25px; max-width: 1000px; margin: 20px auto; padding: 0 20px; }
+        .box-inscricao, .box-pesquisa { flex: 1; min-width: 320px; background: rgba(18, 18, 18, 0.85); padding: 25px; border-radius: 8px; border: 1px solid #333; backdrop-filter: blur(10px); box-shadow: 0px 4px 20px rgba(0,0,0,0.5); box-sizing: border-box; margin: 0; }
+
+        .box-info { background: rgba(18, 18, 18, 0.85); padding: 25px; border-radius: 8px; max-width: 550px; margin: 40px auto 20px auto; border: 1px solid #333; backdrop-filter: blur(10px); box-shadow: 0px 4px 20px rgba(0,0,0,0.5); }
+        .box-info p { margin: 12px 0; font-size: 15px; line-height: 1.6; text-align: left; }
+
+        .btn-contacto-unificado { display: block; width: 100%; padding: 14px; margin: 12px 0; font-size: 16px; font-weight: bold; text-decoration: none; border-radius: 4px; text-align: center; cursor: pointer; border: none; font-family: Arial, sans-serif; box-sizing: border-box; transition: 0.3s; }
+        .btn-wpp-cor { background: #25d366 !important; color: #ffffff !important; }
+        .btn-wpp-cor:hover { background: #1ebd58 !important; transform: scale(1.02); }
+        .btn-insta-cor { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%) !important; color: #ffffff !important; }
+        .btn-insta-cor:hover { opacity: 0.9; transform: scale(1.02); }
+        .btn-contacto-unificado i { margin-right: 10px; font-size: 18px; vertical-align: middle; }
+
+        input, select { padding: 12px; width: 100%; border-radius: 4px; border: 1px solid #444; background: #1a1a1a; color: white; font-size: 16px; margin: 8px 0 15px 0; box-sizing: border-box; }
+        .btn-busca, .btn-enviar-inscricao { padding: 12px 25px; background: #ffffff; color: #000000; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; width: 100%; font-size: 16px; }
+        .resultado { margin-top: 25px; font-size: 16px; text-align: left; background: rgba(26, 26, 26, 0.9); padding: 15px; border-radius: 4px; display: none; border: 1px solid #444; line-height: 1.6; }
+
+
+        .box-eventos { background: rgba(18, 18, 18, 0.85); padding: 25px; border-radius: 8px; max-width: 750px; margin: 20px auto; border: 1px solid #333; backdrop-filter: blur(10px); box-shadow: 0px 4px 20px rgba(0,0,0,0.5); }
+        .evento-card { background: rgba(30,30,30,0.8); border-left: 3px solid #ffcc00; border-radius: 6px; padding: 12px 16px; margin-bottom: 12px; text-align: left; }
+        .evento-card .ev-titulo { font-size: 16px; font-weight: bold; }
+        .evento-card .ev-info { font-size: 13px; color: #aaa; margin-top: 4px; }
+        .assinatura-portfolio { width: 100%; padding: 20px 0; background: rgba(10, 10, 10, 0.95); color: #888888; font-size: 13px; border-top: 1px solid #222; margin-top: 60px; user-select: none; pointer-events: none; }
+        .link-suporte { color: #888888; text-decoration: underline; pointer-events: auto !important; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <img src="logo.JPG.jpeg" alt="Logo GFT Pimenta" class="header-logo"><br>
+        <h1>🥋 Projeto Social GFT PIMENTA</h1>
+        <p>Transformando vidas através do Muay Thai, Boxe e Jiu-Jitsu</p>
+        <a href="./login.html" target="_blank" class="btn-admin-topo">Área do Professor</a>
+    </header>
+
+    <div class="painel-horarios">
+        <div class="horarios-titulo">📅 HORÁRIOS E INFORMAÇÕES DO TREINO</div>
+        <div class="horarios-grid">
+            <div class="horario-item"><h4>Terça-Feira</h4><p style="color: #ffcc00;">19h às 21h</p></div>
+            <div class="horario-item"><h4>Quinta-Feira</h4><p style="color: #ffcc00;">19h às 21h</p></div>
+            <div class="horario-item"><h4>Faixa Etária</h4><p>A partir dos 9 anos</p></div>
+            <div class="horario-item"><h4>Público e Gênero</h4><p>Adulto / Infantil</p></div>
+        </div>
+    </div>
+
+    <div class="carrossel-section">
+        <div class="carrossel-window"><div id="esteira-carrossel" class="carrossel-track"></div></div>
+    </div>
+
+    <div class="container-duplo">
+        <div class="box-inscricao">
+            <h3 style="margin-top: 0; font-size: 18px;">📝 Ficha de Inscrição</h3>
+            <input type="text" id="insNome" placeholder="Digite o seu nome">
+            <input type="tel" id="insTel" placeholder="31 00000-0000">
+            <select id="insModalidade">
+                <option value="Muay Thai">Muay Thai</option>
+                <option value="Boxe">Boxe</option>
+                <option value="Jiu-Jitsu">Jiu-Jitsu</option>
+            </select>
+            <button class="btn-enviar-inscricao" onclick="enviarInscricaoAtletaNoWhatsApp()">Enviar Inscrição</button>
+        </div>
+        <div class="box-pesquisa">
+            <h3 style="margin-top: 0; font-size: 18px;">🔍 Ficha de Aluno Matriculado</h3>
+            <input type="text" id="buscaMatricula" placeholder="Ex: 2026001">
+            <button class="btn-busca" onclick="buscarMatriculaNoSistema()">Buscar Atleta</button>
+            <div id="resultadoBox" class="resultado"></div>
+        </div>
+    </div>
+
+
+    <!-- PRÓXIMOS EVENTOS - PÚBLICO -->
+    <div class="box-eventos" id="secao-eventos">
+        <h3>🥊 Próximos Eventos</h3>
+        <div id="eventosPublicos"><p style="color:#aaa;">Nenhum evento agendado no momento.</p></div>
+    </div>
+
+    <div class="box-info">
+        <h3>📍 Localização e Contactos</h3>
+        <p><strong>Endereço:</strong> Rua Delfin Moreira (Escola Cristiano Pacífico)</p>
+        <a href="https://wa.me/5531973586216" target="_blank" class="btn-contacto-unificado btn-wpp-cor">
+            <i class="fa-brands fa-whatsapp"></i> WhatsApp
+        </a>
+        <a href="https://instagram.com/pimentafightteam" target="_blank" class="btn-contacto-unificado btn-insta-cor">
+            <i class="fa-brands fa-instagram"></i> Instagram: @pimentafightteam
+        </a>
+    </div>
+
+    <footer class="assinatura-portfolio">
+        Desenvolvido por <strong>Marcos Ribeiro</strong> | 
+        <a href="https://wa.me/351936707337" target="_blank" class="link-suporte">Contacto Suporte: +351 936 707 337</a> <br>
+        &copy; 2026 | Portfólio de Análise e Desenvolvimento de Sistemas (ADS) - Código Protegido
+    </footer>
+
+    <script>
+
+        function carregarEventosPublicos() {
+            let eventos = JSON.parse(localStorage.getItem('eventosPimenta') || '[]');
+            let div = document.getElementById('eventosPublicos');
+            let hoje = new Date(); hoje.setHours(0,0,0,0);
+            let futuros = eventos.filter(e => new Date(e.data + 'T00:00:00') >= hoje);
+            if (futuros.length === 0) {
+                div.innerHTML = '<p style="color:#aaa;">Nenhum evento agendado no momento.</p>';
+                document.getElementById('secao-eventos').style.display = 'none';
+                return;
+            }
+            document.getElementById('secao-eventos').style.display = 'block';
+            div.innerHTML = futuros.map(e => {
+                let dataFormatada = new Date(e.data + 'T00:00:00').toLocaleDateString('pt-BR');
+                return '<div class="evento-card"><div class="ev-titulo">🥊 ' + e.titulo + '</div><div class="ev-info">📅 ' + dataFormatada + (e.hora ? ' às ' + e.hora : '') + (e.local ? ' | 📍 ' + e.local : '') + '</div>' + (e.descricao ? '<div class="ev-info" style="color:#ccc;margin-top:4px;">' + e.descricao + '</div>' : '') + '</div>';
+            }).join('');
+        }
+
+        function carregarFotosNoCarrossel() {
+            let track = document.getElementById('esteira-carrossel');
+            let fotosPadrao = [
+                'pimenta1.jpeg','pimenta2.jpeg','pimenta3.jpeg','pimenta4.jpeg','pimenta5.jpeg',
+                'pimenta6.jpeg','pimenta7.jpeg','pimenta8.jpeg','pimenta9.jpeg','pimenta10.jpeg',
+                'pimenta11.jpeg','pimenta12.jpeg','pimenta13.jpeg','pimenta14.jpeg','pimenta15.jpeg',
+                'pimenta16.jpeg','pimenta17.jpeg','pimenta18.jpeg','pimenta19.jpeg','pimenta20.jpeg',
+                'pimenta21.jpeg'
+            ];
+            track.innerHTML = "";
+            fotosPadrao.forEach(foto => {
+                track.innerHTML += '<div class="foto-card"><img src="' + foto + '" onerror="this.parentElement.style.display=\'none\'"></div>';
+            });
+            fotosPadrao.forEach(foto => {
+                track.innerHTML += '<div class="foto-card"><img src="' + foto + '" onerror="this.parentElement.style.display=\'none\'"></div>';
+            });
+        }
+
+        function buscarMatriculaNoSistema() {
+            let resultadoBox = document.getElementById('resultadoBox');
+            resultadoBox.style.display = "block";
+            resultadoBox.innerHTML = '<span style="color: #ff4444; font-weight: bold;">❌ Matrícula não localizada no sistema.</span>';
+        }
+
+        function enviarInscricaoAtletaNoWhatsApp() {
+            let nome = document.getElementById('insNome').value.trim();
+            let tel = document.getElementById('insTel').value.trim();
+            let modalidade = document.getElementById('insModalidade').value;
+            if (!nome || !tel) { alert('Por favor, preenche o nome e o telefone!'); return; }
+            let mensagem = 'Olá! Gostaria de me inscrever no GFT Pimenta! 🥋\n\n👤 Nome: ' + nome + '\n📞 Telefone: ' + tel + '\n🥊 Modalidade: ' + modalidade;
+            window.open('https://wa.me/5531973586216?text=' + encodeURIComponent(mensagem), '_blank');
+        }
+
+        carregarFotosNoCarrossel();
+        carregarEventosPublicos();
+    </script>
+
+</body>
+</html>
